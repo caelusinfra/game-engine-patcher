@@ -2,10 +2,15 @@ name: Build
 
 on:
   push:
+    tags:
+      - "v*"
     paths:
       - "src/**"
       - ".github/workflows/build.yml"
       - "xmake.lua"
+
+permissions:
+  contents: write
 
 jobs:
   cancel-old-build:
@@ -25,7 +30,6 @@ jobs:
 
     strategy:
       fail-fast: true
-      
       matrix:
         mode:
           - release-client
@@ -52,3 +56,16 @@ jobs:
         run: |
           xmake config --mode=${{ matrix.mode }} --verbose --yes
           xmake build --verbose --yes --all
+
+      - name: Archive build
+        run: |
+          mkdir artifacts
+          xcopy build\${{ matrix.mode }} artifacts\ /E /I /Y
+          powershell Compress-Archive artifacts ${{ matrix.mode }}.zip
+
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ matrix.mode }}.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
