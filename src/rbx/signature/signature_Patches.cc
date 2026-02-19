@@ -21,8 +21,8 @@ constexpr const std::uintptr_t ADDRESS_RBX_VERIFYSIGNATUREBASE64 = 0x00FDDAF0;
 /* For now, 5 empty public keys set here as update_public_keys will fetch them from key-management-service */
 static LPCSTR kPublicKeys[] = {"", "", "", "", ""};
 
-constexpr const char* const kKmsService	 = "kms.api";
-constexpr const char* const kKmsEndpoint = "v1/GetClientPublicKeys";
+constexpr const char* const kKmsService	 = "kms-api";
+constexpr const char* const kKmsEndpoint = "v1/get-client-public-keys";
 
 static bool s_CanUpdatePublicKeys = false;
 }  // namespace
